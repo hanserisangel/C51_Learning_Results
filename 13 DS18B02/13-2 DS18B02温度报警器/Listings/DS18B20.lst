@@ -1,0 +1,55 @@
+C51 COMPILER V9.54   DS18B20                                                               01/31/2024 13:10:22 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE DS18B20
+OBJECT MODULE PLACED IN .\Objects\DS18B20.obj
+COMPILER INVOKED BY: F:\Keil5\C51\BIN\C51.EXE DS18B20.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\DS1
+                    -8B20.lst) OBJECT(.\Objects\DS18B20.obj)
+
+line level    source
+
+   1          #include <REGF51RC.H>
+   2          #include "OneWire.h"
+   3          
+   4          #define DS18B20_SKIP_ROM                0xCC
+   5          #define DS18B20_CONVERT_T               0x44
+   6          #define DS18B20_READ_SCRATCHPAD 0xBE
+   7          
+   8          // 温度转换指令
+   9          void DS18B20_ConvertT()
+  10          {
+  11   1              OneWire_Init();
+  12   1              OneWire_SendByte(DS18B20_SKIP_ROM);
+  13   1              OneWire_SendByte(DS18B20_CONVERT_T);
+  14   1      }
+  15          
+  16          // 读取温度指令
+  17          float DS18B20_ReadT()
+  18          {
+  19   1              unsigned char TLSB, THSB;
+  20   1              int temp;
+  21   1              float T;
+  22   1              OneWire_Init();
+  23   1              OneWire_SendByte(DS18B20_SKIP_ROM);
+  24   1              OneWire_SendByte(DS18B20_READ_SCRATCHPAD);
+  25   1              TLSB = OneWire_ReceiveByte(); // 第 0 个字节
+  26   1              THSB = OneWire_ReceiveByte(); // 第 1 个字节
+  27   1              
+  28   1              temp = (THSB << 8) | TLSB; // int 16位
+  29   1              T = temp / 16.0; // 因为低 4 位是小数
+  30   1              return T;
+  31   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     57    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       1
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

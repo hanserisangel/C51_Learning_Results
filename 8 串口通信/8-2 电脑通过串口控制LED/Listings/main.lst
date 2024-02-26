@@ -1,0 +1,48 @@
+C51 COMPILER V9.54   MAIN                                                                  01/27/2024 11:48:03 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: F:\Keil5\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\main.l
+                    -st) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include <REGF51RC.H>
+   2          #include "Delay.h"
+   3          #include "UART.h"
+   4          
+   5          int main()
+   6          {
+   7   1              UART_Init();
+   8   1              while(1)
+   9   1              {
+  10   2                      
+  11   2              }
+  12   1      }
+  13          
+  14          void hanser() interrupt 4
+  15          {
+  16   1              if(RI == 1) // 因为发送数据 TI = 1 时也会进入中断, 所以这里要特判一下
+  17   1              {
+  18   2                      P2 = SBUF;
+  19   2                      
+  20   2                      SendByte(SBUF); // 发送接收到的数据
+  21   2                      
+  22   2                      RI = 0; // 接收完清零
+  23   2              }
+  24   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     74    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

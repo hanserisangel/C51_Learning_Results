@@ -1,0 +1,70 @@
+C51 COMPILER V9.54   MATRIXLED                                                             01/27/2024 20:32:45 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE MATRIXLED
+OBJECT MODULE PLACED IN .\Objects\MatrixLED.obj
+COMPILER INVOKED BY: F:\Keil5\C51\BIN\C51.EXE MatrixLED.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\M
+                    -atrixLED.lst) OBJECT(.\Objects\MatrixLED.obj)
+
+line level    source
+
+   1          #include <REGF51RC.H>
+   2          #include "Delay.h"
+   3          
+   4          sbit RCLK = P3^5;
+   5          sbit SRCLK = P3^6;
+   6          sbit SER = P3^4;
+   7          
+   8          void MatrixLED_Init()
+   9          {
+  10   1              // 因为上升沿移位, 所以上电后 低电平
+  11   1              SRCLK = 0;
+  12   1              RCLK = 0;
+  13   1      }
+  14          
+  15          void WriteByte(unsigned char Byte)
+  16          {
+  17   1              unsigned char i;
+  18   1              for(i = 0; i < 8; i ++) // 取出 Byte 的每一位
+  19   1              {
+  20   2                      SER = Byte & (0x80 >> i);
+  21   2                      
+  22   2                      // 上升沿移位
+  23   2                      SRCLK = 1;
+  24   2                      SRCLK = 0;
+  25   2              }
+  26   1              
+  27   1              // 上升沿锁存
+  28   1              RCLK = 1;
+  29   1              RCLK = 0;
+  30   1      }
+  31          
+  32          /* 1 列显示函数
+  33                  Col 列, [0, 7]
+  34                  Data 段选信号
+  35          */
+  36          void ShowMatrixLED(unsigned char Col, Data)
+  37          {
+  38   1              WriteByte(Data); // 段选
+  39   1              P0 = ~(0x80 >> Col); // 位选
+  40   1              
+  41   1              // 消影
+  42   1              Delay(1);
+  43   1              P0 = 0xff; // 位选清零
+  44   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     84    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+C51 COMPILER V9.54   MATRIXLED                                                             01/27/2024 20:32:45 PAGE 2   
+
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
